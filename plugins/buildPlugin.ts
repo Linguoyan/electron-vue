@@ -11,7 +11,7 @@ class BuildObj {
             entryPoints: ["./src/main/mainEntry.ts"],
             bundle: true,
             platform: "node",
-            minify: true,
+            minify: true, // 生成压缩代码
             outfile: "./dist/mainEntry.js",
             external: ["electron"],
         });
@@ -24,6 +24,7 @@ class BuildObj {
     preparePackageJson() {
         let pkgJsonPath = path.join(process.cwd(), "package.json");
         let localPkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"));
+        // Electron 的版本号前面有"^"符号的话，要删掉。electron-builder 无法识别带 ^ 或 ~ 符号的版本号，这是个 bug
         let electronConfig = localPkgJson.devDependencies.electron.replace(
             "^",
             ""
@@ -44,8 +45,8 @@ class BuildObj {
         let options = {
             config: {
                 directories: {
-                    output: path.join(process.cwd(), "release"),
-                    app: path.join(process.cwd(), "dist"),
+                    output: path.join(process.cwd(), "release"), // 安装包存放目录
+                    app: path.join(process.cwd(), "dist"), // 静态文件目录
                 },
                 files: ["**"],
                 extends: null,
