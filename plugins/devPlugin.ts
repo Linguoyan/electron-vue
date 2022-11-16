@@ -1,4 +1,4 @@
-import { ViteDevServer } from "vite";
+import { ViteDevServer, WebSocket } from "vite";
 
 /**
  * 当 Vite 为我们启动 Http 服务的时候，configureServer钩子会被执行
@@ -20,7 +20,8 @@ export let devPlugin = () => {
 
             server.httpServer.once("listening", () => {
                 let { spawn } = require("child_process");
-                let addressInfo = server.httpServer.address();
+                let addressInfo =
+                    server.httpServer.address() as WebSocket.AddressInfo;
                 let httpAddress = `http://${addressInfo.address}:${addressInfo.port}`;
                 let electronProcess = spawn(
                     require("electron").toString(),
