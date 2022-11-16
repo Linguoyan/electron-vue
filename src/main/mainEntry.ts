@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import { CustomScheme } from "./customScheme";
 
 /**
  * 设置渲染进程开发者调试工具的警告，这里设置为 true 就不会再显示任何警告了
@@ -30,5 +31,15 @@ app.whenReady().then(() => {
     };
     mainWindow = new BrowserWindow(config);
     mainWindow.webContents.openDevTools({ mode: "undocked" }); // 打开开发者调试工具
-    mainWindow.loadURL(process.argv[2]);
+
+    /**
+     * 当存在指定的命令行参数时，认为是开发环境，使用命令行参数加载页面
+     *当不存在命令行参数时，认为是生产环境，通过app://scheme 加载页面
+     */
+    if (process.argv[2]) {
+        mainWindow.loadURL(process.argv[2]);
+    } else {
+        CustomScheme.registerScheme();
+        mainWindow.loadURL(`app://index.html`);
+    }
 });

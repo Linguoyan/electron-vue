@@ -3,8 +3,6 @@ import { ViteDevServer, WebSocket } from "vite";
 /**
  * 当 Vite 为我们启动 Http 服务的时候，configureServer钩子会被执行
  * 我们通过监听 server.httpServer 的 listening 事件来判断 httpServer 是否已经成功启动。如果已经成功启动了，那么就启动 Electron 应用
- *
- *
  */
 export let devPlugin = () => {
     return {
