@@ -1,9 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import BarTop from "../../Component/BarTop.vue";
+</script>
 <template>
-    <div>收藏</div>
+  <div>收藏</div>
+  <div class="CollectionBoard"><BarTop /></div>
 </template>
 <style scoped lang="scss">
 .CollectionBoard {
-    flex: 1;
+  flex: 1;
 }
 </style>

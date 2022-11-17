@@ -1,7 +1,5 @@
 <template>
-    <div>this is contact.</div>
+    <div>this is concat</div>
 </template>
-<script lang="ts">
-export default {};
-</script>
+<script lang="ts"></script>
 <style lang="scss"></style>
