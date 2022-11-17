@@ -1,7 +1,3 @@
-<template>
-    <div>this is chat</div>
-</template>
-<script lang="ts">
-export default {};
-</script>
-<style lang=""></style>
+<script setup lang="ts"></script>
+<template>this is chat</template>
+<style scoped lang="scss"></style>

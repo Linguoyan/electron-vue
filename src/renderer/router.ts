@@ -7,7 +7,6 @@ export let router = VueRouter.createRouter({
         { path: "/", redirect: "/WindowMain/Chat" },
         {
             path: "/WindowMain",
-            // 使用 import 动态引入，避免一启动就加载庞大的文件
             component: () => import("./Window/WindowMain.vue"),
             children: [
                 { path: "Chat", component: () => import("./Window/WindowMain/Chat.vue") },

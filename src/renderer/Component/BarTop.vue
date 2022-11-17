@@ -1,5 +1,5 @@
 <template>
-    <div>this is contact.</div>
+    <div>this is top</div>
 </template>
 <script lang="ts">
 export default {};

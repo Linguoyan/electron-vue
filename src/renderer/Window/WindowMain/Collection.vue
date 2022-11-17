@@ -1,7 +1,9 @@
+<script setup lang="ts"></script>
 <template>
-    <div>this is collection</div>
+    <div>收藏</div>
 </template>
-<script lang="ts">
-export default {};
-</script>
-<style lang=""></style>
+<style scoped lang="scss">
+.CollectionBoard {
+    flex: 1;
+}
+</style>
