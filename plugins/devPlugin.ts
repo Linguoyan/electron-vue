@@ -18,17 +18,13 @@ export let devPlugin = () => {
 
             server.httpServer.once("listening", () => {
                 let { spawn } = require("child_process");
-                let addressInfo =
-                    server.httpServer.address() as WebSocket.AddressInfo;
-                let httpAddress = `http://${addressInfo.address}:${addressInfo.port}`;
-                let electronProcess = spawn(
-                    require("electron").toString(),
-                    ["./dist/mainEntry.js", httpAddress],
-                    {
-                        cwd: process.cwd(), // 设置当前的工作目录
-                        stdio: "inherit", // electron 进程的控制台输出, inherit: 子进程控制台输出同步到主进程
-                    }
-                );
+                let addressInfo = server.httpServer.address() as WebSocket.AddressInfo;
+                let httpAddress = `http://${addressInfo.address}:${addressInfo.port}`; // vue 页面 http 地址
+                // 子进程启动: spaw(electron.exe地址, [主进程编译后的文件地址, Vue页面http地址], {})
+                let electronProcess = spawn(require("electron").toString(), ["./dist/mainEntry.js", httpAddress], {
+                    cwd: process.cwd(), // 设置当前的工作目录
+                    stdio: "inherit", // electron 进程的控制台输出, inherit: 子进程控制台输出同步到主进程
+                });
 
                 electronProcess.on("close", () => {
                     server.close();
@@ -41,19 +37,7 @@ export let devPlugin = () => {
 
 // 为 vite-plugin-optimizer 插件提供的内置模块列表
 export let getReplacer = () => {
-    let externalModels = [
-        "os",
-        "fs",
-        "path",
-        "events",
-        "child_process",
-        "crypto",
-        "http",
-        "buffer",
-        "url",
-        "better-sqlite3",
-        "knex",
-    ];
+    let externalModels = ["os", "fs", "path", "events", "child_process", "crypto", "http", "buffer", "url", "better-sqlite3", "knex"];
     let result = {};
     for (let item of externalModels) {
         result[item] = () => ({
@@ -62,13 +46,7 @@ export let getReplacer = () => {
         });
     }
     result["electron"] = () => {
-        let electronModules = [
-            "clipboard",
-            "ipcRenderer",
-            "nativeImage",
-            "shell",
-            "webFrame",
-        ].join(",");
+        let electronModules = ["clipboard", "ipcRenderer", "nativeImage", "shell", "webFrame"].join(",");
         return {
             find: new RegExp(`^electron$`),
             code: `const {${electronModules}} = require('electron');export {${electronModules}}`,

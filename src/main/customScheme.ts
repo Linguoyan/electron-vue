@@ -2,7 +2,7 @@ import { protocol } from "electron";
 import fs from "fs";
 import path from "path";
 
-// 为自定义的app协议提供特权
+// 为自定义的app协议提供的特权清单
 let schemeConfig = {
     standard: true,
     supportFetchAPI: true,
@@ -11,9 +11,8 @@ let schemeConfig = {
     stream: true,
 };
 
-protocol.registerSchemesAsPrivileged([
-    { scheme: "app", privileges: schemeConfig },
-]);
+// 该代码在主进程 app ready 前，通过 protocol 对象的 registerSchemesAsPrivileged 方法为名为 app 的 scheme 注册了特权
+protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: schemeConfig }]);
 
 export class CustomScheme {
     // 根据文件扩展名获取mime-type
@@ -35,8 +34,8 @@ export class CustomScheme {
 
     /**
      * 注册自定义app协议
-     * 该代码在主进程 app ready 前，通过 protocol 对象的 registerSchemesAsPrivileged 方法为名为 app 的 scheme 注册了特权
-     * 当我们加载类似 app://index.html 这样的路径时，该回调函数将被执行
+     * app ready 之后，通过protocol对象的 registerStreamProtocol 方法为名为 app 的 scheme 注册了一个回调函数
+     * 当加载类似 app://index.html 这样的路径时，该回调函数将被执行
      */
     static registerScheme() {
         protocol.registerStreamProtocol("app", (request, callback) => {

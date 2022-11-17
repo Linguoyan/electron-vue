@@ -11,7 +11,7 @@ class BuildObj {
             entryPoints: ["./src/main/mainEntry.ts"],
             bundle: true,
             platform: "node",
-            minify: true, // 生成压缩代码
+            minify: true, // 此处是生产环境编译，需生成压缩代码
             outfile: "./dist/mainEntry.js",
             external: ["electron"],
         });
@@ -25,10 +25,7 @@ class BuildObj {
         let pkgJsonPath = path.join(process.cwd(), "package.json");
         let localPkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"));
         // Electron 的版本号前面有"^"符号的话，要删掉。electron-builder 无法识别带 ^ 或 ~ 符号的版本号，这是个 bug
-        let electronConfig = localPkgJson.devDependencies.electron.replace(
-            "^",
-            ""
-        );
+        let electronConfig = localPkgJson.devDependencies.electron.replace("^", "");
         localPkgJson.main = "mainEntry.js";
         delete localPkgJson.scripts;
         delete localPkgJson.devDependencies;
@@ -40,6 +37,7 @@ class BuildObj {
 
     /**
      * 【使用 electron-builder 制成安装包】
+     * 负责调用 electron-builder 的 api 以生成安装包
      */
     buildInstaller() {
         let options = {
@@ -61,9 +59,7 @@ class BuildObj {
                     createStartMenuShortcut: true,
                     shortcutName: "juejinDesktop",
                 },
-                publish: [
-                    { provider: "generic", url: "http://localhost:5500/" },
-                ],
+                publish: [{ provider: "generic", url: "http://localhost:5500/" }],
             },
             project: process.cwd(),
         };
