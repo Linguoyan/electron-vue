@@ -5,8 +5,7 @@ import { onMounted } from "vue";
 
 onMounted(() => {
     // 在渲染进程中使用 electron 和 node.js 内置模块
-    // console.log(fs.writeFileSync);
-    // console.log(ipcRenderer);
+    console.log(fs.writeFileSync);
 });
 </script>
 

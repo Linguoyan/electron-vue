@@ -30,8 +30,7 @@ export class CommonWindowEvent {
 
         // 显示窗口
         ipcMain.handle("showWindow", (e) => {
-            // this.getWin(e)?.show();
-            console.log("###-", e);
+            this.getWin(e)?.show();
         });
 
         // 关闭
