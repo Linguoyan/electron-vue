@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import { CommonWindowEvent } from "./CommonWindowEvent";
 import { CustomScheme } from "./customScheme";
 
 /**
@@ -7,6 +8,10 @@ import { CustomScheme } from "./customScheme";
  * 如果你的应用不会加载任何第三方的页面或脚本，就不用担心这些安全问题
  */
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
+
+app.on("browser-window-created", (e, win) => {
+    CommonWindowEvent.regWinEvent(win);
+});
 
 // 设置成一个全局变量，避免主窗口被 JS 的垃圾回收器回收掉
 let mainWindow: BrowserWindow;
@@ -19,6 +24,8 @@ let mainWindow: BrowserWindow;
 
 app.whenReady().then(() => {
     let config = {
+        frame: false, // 无边框
+        show: false, // 页面渲染完成之间先隐藏
         webPreferences: {
             nodeIntegration: true, // 把 Node.js 环境集成到渲染进程
             webSecurity: false,
@@ -30,7 +37,7 @@ app.whenReady().then(() => {
         },
     };
     mainWindow = new BrowserWindow(config);
-    mainWindow.webContents.openDevTools({ mode: "undocked" }); // 打开开发者调试工具
+    // mainWindow.webContents.openDevTools({ mode: "undocked" }); // 打开开发者调试工具
 
     /**
      * 当存在指定的命令行参数时，认为是开发环境，使用命令行参数加载页面
@@ -42,4 +49,6 @@ app.whenReady().then(() => {
         CustomScheme.registerScheme();
         mainWindow.loadURL(`app://index.html`);
     }
+
+    CommonWindowEvent.listen();
 });
