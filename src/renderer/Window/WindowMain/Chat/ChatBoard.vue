@@ -2,9 +2,7 @@
 import { onMounted } from "vue";
 // import ChatItem from "./ChatItem.vue";
 import ChatSearch from "./ChatSearch.vue";
-onMounted(() => {
-    // store.$patch((v) => (v.data[5].isSelected = true));
-});
+onMounted(() => {});
 </script>
 <template>
     <div class="ChatList">
