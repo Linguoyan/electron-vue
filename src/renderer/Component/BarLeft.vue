@@ -45,6 +45,16 @@ let openSettingWindow = async () => {
     // 打开子窗口，子窗口完成业务逻辑后，返回 window 对象给 dialog
     let dialog = await createDialog(`/WindowSetting/AccountSetting`, config);
 
+    // 父子窗口相互通信：父窗口向子窗口传递消息
+    let msg = { msgName: "hello", value: "msg from your parent" };
+    dialog.postMessage(msg); // 向其他窗口传递msg
+
+    // 父窗口接受信息
+    window.addEventListener("message", (e) => {
+        const { value } = e.data;
+        console.log("BarLeft-listen-message: ", value, Date.now());
+    });
+
     // window.open(`/WindowSetting/AccountSetting`, "_blank", JSON.stringify(config));
 };
 </script>

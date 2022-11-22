@@ -6,6 +6,12 @@ import BarTop from "../Component/BarTop.vue";
 onMounted(() => {
     console.log("ready", Date.now());
     dialogReady();
+
+    // 子窗口接口信息
+    window.addEventListener("message", (e) => {
+        // 接收到信息后反馈给父窗口
+        window.opener.postMessage({ msgName: "hello", value: "I am your son." });
+    });
 });
 </script>
 <template>
