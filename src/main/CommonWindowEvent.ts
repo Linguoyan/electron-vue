@@ -63,7 +63,7 @@ export class CommonWindowEvent {
             // 基础窗口配置对象
             let config: any = {
                 frame: false,
-                show: false,
+                show: true,
                 webPreferences: {
                     nodeIntegration: true,
                     webSecurity: false,
