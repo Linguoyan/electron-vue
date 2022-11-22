@@ -1,7 +1,5 @@
+<script setup lang="ts"></script>
 <template>
-    <div>this is WindowSetting/AccountSetting.vue</div>
+    <div>账号设置</div>
 </template>
-<script lang="ts">
-export default {};
-</script>
-<style lang=""></style>
+<style scoped lang="scss"></style>

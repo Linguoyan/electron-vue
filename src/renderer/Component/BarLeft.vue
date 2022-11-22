@@ -8,7 +8,7 @@
                 <i :class="[`icon`, item.isSelected ? item.iconSelected : item.icon]"></i>
             </router-link>
         </div>
-        <div class="setting">
+        <div @click="openSettingWindow" class="setting">
             <div class="menuItem">
                 <i class="icon icon-setting"></i>
             </div>
@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { createDialog } from "../common/Dialog";
 
 // 菜单列表数组
 let mainWindowRoutes = ref([
@@ -37,6 +38,19 @@ watch(
         deep: true,
     }
 );
+
+// 打开设置
+let openSettingWindow = async () => {
+    let config = { modal: true, width: 800, webPreferences: { webviewTag: false } };
+    // let dialog = await createDialog(`/WindowSetting/AccountSetting`, config);
+    // window.addEventListener("message", (e) => {
+    //     console.log(e.data);
+    // });
+    // let msg = { msgName: "hello", value: "msg from your parent" };
+    // dialog.postMessage(msg);
+
+    window.open(`/WindowSetting/AccountSetting`, "_blank", JSON.stringify(config));
+};
 </script>
 
 <style scoped lang="scss">
