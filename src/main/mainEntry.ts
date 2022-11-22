@@ -9,7 +9,10 @@ import { CustomScheme } from "./customScheme";
  */
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 
+// 每当有新的 browserWindow 被创建成功后，就会触发
 app.on("browser-window-created", (e, win) => {
+    console.log("main: browser-window-created");
+
     CommonWindowEvent.regWinEvent(win);
 });
 
@@ -17,12 +20,15 @@ app.on("browser-window-created", (e, win) => {
 let mainWindow: BrowserWindow;
 
 /**
+ * Electron 初始化完成调用
  * app 和 BrowserWindow 都是 Electron 的内置模块，这些内置模块是通过 ES Module 的形式导入进来的
  * Electron 的内置模块都是通过 CJS Module 的形式导出的
  * 这里之所以可以用 ES Module 导入，是因为主进程编译工作完成了相关的转化
  */
 
 app.whenReady().then(() => {
+    console.log("main: whenReady");
+
     let config = {
         frame: false, // 无边框
         show: false, // 页面渲染完成之间先隐藏
