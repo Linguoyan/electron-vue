@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { ipcRenderer } from "electron";
 import BarTop from "../Component/BarTop.vue";
 onMounted(() => {
     console.log("ready", Date.now());
+    // ipcRenderer.invoke("showWindow");
 });
 </script>
 <template>
