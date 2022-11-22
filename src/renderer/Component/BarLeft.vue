@@ -42,14 +42,10 @@ watch(
 // 打开设置
 let openSettingWindow = async () => {
     let config = { modal: true, width: 800, webPreferences: { webviewTag: false } };
-    // let dialog = await createDialog(`/WindowSetting/AccountSetting`, config);
-    // window.addEventListener("message", (e) => {
-    //     console.log(e.data);
-    // });
-    // let msg = { msgName: "hello", value: "msg from your parent" };
-    // dialog.postMessage(msg);
+    // 打开子窗口，子窗口完成业务逻辑后，返回 window 对象给 dialog
+    let dialog = await createDialog(`/WindowSetting/AccountSetting`, config);
 
-    window.open(`/WindowSetting/AccountSetting`, "_blank", JSON.stringify(config));
+    // window.open(`/WindowSetting/AccountSetting`, "_blank", JSON.stringify(config));
 };
 </script>
 
