@@ -1,5 +1,5 @@
 <template>
-    <div class="topB ar">
+    <div class="topBar">
         <div class="winTitle">{{ title }}</div>
         <div class="winTool">
             <div @click="minimizeMainWindow">
