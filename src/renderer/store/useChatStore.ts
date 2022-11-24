@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
+import { useMessageStore } from "./useMessageStore";
 import { ModelChat } from "../../model/ModelChat";
 
 // 初始化模拟数据
@@ -23,6 +24,9 @@ export const useChatStore = defineStore("chat", () => {
         if (item.isSelected) return;
         data.value.forEach((v) => (v.isSelected = false));
         item.isSelected = true;
+
+        let messageStore = useMessageStore();
+        messageStore.initData(item);
     };
     return { data, selectItem };
 });
