@@ -24,7 +24,7 @@ let messageStore = useMessageStore();
 </script>
 
 <template>
-    <div class="MessageBord">
+    <div class="MessageBoard">
         <BarTop />
         <div class="MessageList">
             <MessageItem :data="item" v-for="item in messageStore.data" :key="item.id" />
@@ -33,7 +33,7 @@ let messageStore = useMessageStore();
 </template>
 
 <style scoped lang="scss">
-.MessageBord {
+.MessageBoard {
     height: 100%;
     display: flex;
     flex: 1;
