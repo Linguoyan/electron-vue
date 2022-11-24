@@ -1,4 +1,6 @@
 import { ModelBase } from "./ModelBase";
+
+// 聊天会话模型
 export class ModelChat extends ModelBase {
     fromName?: string;
     sendTime?: number | string;
