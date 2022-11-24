@@ -1,39 +1,31 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import BarTop from "../../../Component/BarTop.vue";
-// import MessageItem from "./MessageItem.vue";
+import { useChatStore } from "../../../store/useChatStore";
 
-// 阶段1
-// import { ref } from "vue";
-// let store = useChatStore();
-// let logInfo = ref("");
-// let curId = "";
-// store.$subscribe((mutations, state) => {
-//   let item = state.data.find((v) => v.isSelected);
-//   let id = item?.id as string;
-//   if (id != curId) {
-//     logInfo.value = `现在应该加载ID为${item?.id}的聊天记录`;
-//     curId = id;
-//   }
-// });
+let store = useChatStore();
+let logInfo = ref("");
+let curId = "";
 
-// 阶段2
-// import { ModelChat } from "../../../../model/ModelChat";
-// import { useChatStore } from "../../../store/useChatStore";
-// let chatStore = useChatStore();
-// let curId = "";
-// chatStore.$subscribe((mutations, state) => {
-//   let item = state.data.find((v) => v.isSelected) as ModelChat;
-//   if (item.id != curId) {
-//     messageStore.initData(item);
-//     curId = item.id;
-//   }
-// });
+// 订阅Store内数据的变化
+// mutations 开发环境存在，生产环境不存在
+store.$subscribe((mutations, state) => {
+    let item = state.data.find((v) => v.isSelected);
+    let id = item?.id as string;
+    if (id != curId) {
+        logInfo.value = `现在应该加载ID为${item?.id}的聊天记录`;
+        curId = id;
+    }
+});
 </script>
+
 <template>
     <div class="MessageBord">
         <BarTop />
+        <div class="MessageList">{{ logInfo }}</div>
     </div>
 </template>
+
 <style scoped lang="scss">
 .MessageBord {
     height: 100%;
