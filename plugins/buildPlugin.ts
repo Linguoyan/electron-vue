@@ -30,10 +30,10 @@ class BuildObj {
         delete localPkgJson.scripts;
         delete localPkgJson.devDependencies;
         localPkgJson.devDependencies = { electron: electronConfig };
-        // 版本号随意匹配
+        // 版本号随意匹配，添加这些配置后，electron-builder 就不会自动去安装这些模块
         localPkgJson.dependencies["better-sqlite3"] = "*";
         localPkgJson.dependencies["bindings"] = "*";
-        // 有这两个配置 electron-builder 就不会再为我们自动安装这些模块
+        localPkgJson.dependencies["knex"] = "*";
 
         let tarJsonPath = path.join(process.cwd(), "dist", "package.json");
         fs.writeFileSync(tarJsonPath, JSON.stringify(localPkgJson));
@@ -86,7 +86,7 @@ class BuildObj {
      * 10.通过 NSIS 工具生成安装程序的可执行文件，把压缩包和卸载程序当作资源写入这个安装程序的可执行文件中，该文件会读取自身的资源，并把这些资源释放到用户指定的安装目录下
      */
 
-    // 准备 sqlite
+    // 利用复制代替编译
     async prepareSqlite() {
         // 1. 把开发环境的 node_modules\better-sqlite3 目录下有用的文件拷贝到 dist\node_modules\better-sqlite3 目录
         // 2. 为这个模块自制了一个简单的package.json。
@@ -120,6 +120,24 @@ class BuildObj {
         pkgJsonPath = path.join(process.cwd(), `dist/node_modules/bindings/package.json`);
         fs.writeFileSync(pkgJsonPath, pkgJson);
     }
+
+    // Knexjs
+    prepareKnexjs() {
+        let pkgJsonPath = path.join(process.cwd(), `dist/node_modules/knex`);
+        fs.ensureDirSync(pkgJsonPath);
+        require("esbuild").buildSync({
+            entryPoints: ["./node_modules/knex/knex.js"],
+            bundle: true,
+            platform: "node",
+            format: "cjs",
+            minify: true,
+            outfile: "./dist/node_modules/knex/index.js",
+            external: ["oracledb", "pg-query-stream", "pg", "sqlite3", "tedious", "mysql", "mysql2", "better-sqlite3"], // 避免编译过程中esbuild去寻找这些模块而导致编译失败
+        });
+        let pkgJson = `{"name": "bindings","main": "index.js"}`;
+        pkgJsonPath = path.join(process.cwd(), `dist/node_modules/knex/package.json`);
+        fs.writeFileSync(pkgJsonPath, pkgJson);
+    }
 }
 
 /**
@@ -135,6 +153,7 @@ export let buildPlugin = () => {
             buildObj.preparePackageJson();
             buildObj.buildInstaller();
             buildObj.prepareSqlite();
+            buildObj.prepareKnexjs();
         },
     };
 };
