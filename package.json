@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
     "preview": "vite preview"
   },
   "devDependencies": {

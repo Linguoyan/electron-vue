@@ -10,6 +10,9 @@ import { ipcRenderer } from "electron";
 import { onMounted } from "vue";
 import BarLeft from "../Component/BarLeft.vue";
 
+const Database = require("better-sqlite3");
+const db = new Database("db.db", { verbose: console.log, nativeBinding: "./node_modules/better-sqlite3/build/Release/better_sqlite3.node" });
+
 onMounted(() => {
     ipcRenderer.invoke("showWindow");
 });
