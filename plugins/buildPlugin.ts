@@ -121,7 +121,7 @@ class BuildObj {
         fs.writeFileSync(pkgJsonPath, pkgJson);
     }
 
-    // Knexjs
+    // Knexjs 会帮我们把 JS 代码转义成具体的 SQL 语句，再把 SQL 语句交给数据库处理,可以理解为一种 SQL Builder
     prepareKnexjs() {
         let pkgJsonPath = path.join(process.cwd(), `dist/node_modules/knex`);
         fs.ensureDirSync(pkgJsonPath);
