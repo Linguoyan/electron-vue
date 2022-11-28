@@ -30,6 +30,11 @@ class BuildObj {
         delete localPkgJson.scripts;
         delete localPkgJson.devDependencies;
         localPkgJson.devDependencies = { electron: electronConfig };
+        // 版本号随意匹配
+        localPkgJson.dependencies["better-sqlite3"] = "*";
+        localPkgJson.dependencies["bindings"] = "*";
+        // 有这两个配置 electron-builder 就不会再为我们自动安装这些模块
+
         let tarJsonPath = path.join(process.cwd(), "dist", "package.json");
         fs.writeFileSync(tarJsonPath, JSON.stringify(localPkgJson));
         fs.mkdirSync(path.join(process.cwd(), "dist/node_modules"));
@@ -80,6 +85,41 @@ class BuildObj {
      * 9. 通过 NSIS 工具生成卸载程序的可执行文件，该卸载程序记录了 win-ia32-unpacked 目录下所有文件的相对路径。当用户卸载时，卸载程序会根据这些路径删除对应的文件、清除相关的注册表信息
      * 10.通过 NSIS 工具生成安装程序的可执行文件，把压缩包和卸载程序当作资源写入这个安装程序的可执行文件中，该文件会读取自身的资源，并把这些资源释放到用户指定的安装目录下
      */
+
+    // 准备 sqlite
+    async prepareSqlite() {
+        // 1. 把开发环境的 node_modules\better-sqlite3 目录下有用的文件拷贝到 dist\node_modules\better-sqlite3 目录
+        // 2. 为这个模块自制了一个简单的package.json。
+        let srcDir = path.join(process.cwd(), `node_modules/better-sqlite3`);
+        let destDir = path.join(process.cwd(), `dist/node_modules/better-sqlite3`);
+        fs.ensureDirSync(destDir);
+
+        // 拷贝better-sqlite3
+        fs.copySync(srcDir, destDir, {
+            filter: (src, dest) => {
+                if (src.endsWith("better-sqlite3") || src.endsWith("build") || src.endsWith("Release") || src.endsWith("better_sqlite3.node")) return true;
+                else if (src.includes("node_modules\\better-sqlite3\\lib")) return true;
+                else return false;
+            },
+        });
+
+        let pkgJson = `{"name": "better-sqlite3","main": "lib/index.js"}`;
+        let pkgJsonPath = path.join(process.cwd(), `dist/node_modules/better-sqlite3/package.json`);
+        fs.writeFileSync(pkgJsonPath, pkgJson);
+
+        // 制作 bindings 模块，把该模块放置在 dist\node_modules\bindings 目录下
+        let bindingPath = path.join(process.cwd(), `dist/node_modules/bindings/index.js`);
+        fs.ensureFileSync(bindingPath);
+        let bindingsContent = `module.exports = () => {
+      let addonPath = require("path").join(__dirname, '../better-sqlite3/build/Release/better_sqlite3.node');
+      return require(addonPath);
+      };`;
+        fs.writeFileSync(bindingPath, bindingsContent);
+
+        pkgJson = `{"name": "bindings","main": "index.js"}`;
+        pkgJsonPath = path.join(process.cwd(), `dist/node_modules/bindings/package.json`);
+        fs.writeFileSync(pkgJsonPath, pkgJson);
+    }
 }
 
 /**
@@ -94,6 +134,7 @@ export let buildPlugin = () => {
             buildObj.buildMain();
             buildObj.preparePackageJson();
             buildObj.buildInstaller();
+            buildObj.prepareSqlite();
         },
     };
 };
