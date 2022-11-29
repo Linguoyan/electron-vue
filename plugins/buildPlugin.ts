@@ -65,6 +65,8 @@ class BuildObj {
                     shortcutName: "juejinDesktop",
                 },
                 publish: [{ provider: "generic", url: "http://localhost:5500/" }],
+                // 当用户升级应用程序时安装目录下的文件都会被删除，数据库中可能保存很多用户数据，这是为了防止每次升级应时用户数据被移除
+                extraResources: [{ from: `./src/common/db.db`, to: `./` }],
             },
             project: process.cwd(),
         };
