@@ -18,8 +18,8 @@ export let devPlugin = () => {
 
             server.httpServer.once("listening", () => {
                 let { spawn } = require("child_process");
-                let addressInfo = server.httpServer.address() as WebSocket.AddressInfo;
-                let httpAddress = `http://${addressInfo.address}:${addressInfo.port}`; // vue 页面 http 地址
+
+                let httpAddress = `http://127.0.0.1:${server.config.server.port}`; // vue 页面 http 地址
                 // 子进程启动: spaw(electron.exe地址, [主进程编译后的文件地址, Vue页面http地址], {})
                 let electronProcess = spawn(require("electron").toString(), ["./dist/mainEntry.js", httpAddress], {
                     cwd: process.cwd(), // 设置当前的工作目录
