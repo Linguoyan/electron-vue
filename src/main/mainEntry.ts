@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import { CommonWindowEvent } from "./CommonWindowEvent";
 import { CustomScheme } from "./customScheme";
+import { Updater } from "./Updater";
 
 /**
  * 设置渲染进程开发者调试工具的警告，这里设置为 true 就不会再显示任何警告了
@@ -54,6 +55,7 @@ app.whenReady().then(() => {
     } else {
         CustomScheme.registerScheme();
         mainWindow.loadURL(`app://index.html`);
+        // Updater.check(); // 检查升级
     }
 
     CommonWindowEvent.listen();
